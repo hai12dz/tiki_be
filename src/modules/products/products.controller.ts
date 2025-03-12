@@ -15,5 +15,10 @@ export class ProductController {
     }
 
 
+    @Get('/filterBook')
+    async filterProduct(@Query() query: any) {
+        const books = await this.productsService.filterProduct(query);
+        return new BaseResponseDto<Pagination<ProductDto>>(HttpStatus.ACCEPTED, "Success", books);
+    }
 
 }

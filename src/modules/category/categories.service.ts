@@ -32,6 +32,10 @@ export class CategoriesService {
     }
 
 
+    async getFullCategories(): Promise<BaseResponseDto<Category[]>> {
+        const categories = await this.categoryRepository.find();
 
+        return new BaseResponseDto<Category[]>(HttpStatus.OK, 'Success', categories);
+    }
 
 }

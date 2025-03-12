@@ -13,6 +13,10 @@ import { RolePermission } from './entities/role-permission.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/category/categories.module';
 import { ProductsModule } from './modules/products/products.module';
+import { Supplier } from './entities/supplier.entity';
+import { Brand } from './entities/brand.entity';
+import { BrandsModule } from './modules/brand/brand.module';
+import { SupplierModule } from './modules/supplier/supplier.module';
 
 @Module({
   imports: [
@@ -27,11 +31,11 @@ import { ProductsModule } from './modules/products/products.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission],
+        entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, Supplier, Brand],
         synchronize: true, // Không dùng trong production
       }),
     }),
-    AuthModule, CategoriesModule, ProductsModule
+    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule
 
   ],
 })

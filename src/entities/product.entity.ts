@@ -1,26 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { OrderItem } from './order-item.entity';
 import { CartItem } from './cart-item.entity';
 import { BaseEntity } from './base.entity';
+import { Supplier } from './supplier.entity';
+import { Brand } from './brand.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
-
 
     @Column()
     mainText: string;
 
     @Column()
-    author: string
+    author: string;
 
     @Column()
     thumbnail: string;
 
     @Column({ type: 'simple-json', nullable: true })
     slider: string[];
-
 
     @Column('decimal', { precision: 10, scale: 2 })
     price: number;
@@ -29,7 +29,7 @@ export class Product extends BaseEntity {
     sold: number;
 
     @Column()
-    quantity: number
+    quantity: number;
 
     @ManyToOne(() => Category, category => category.products)
     category: Category;
@@ -45,4 +45,10 @@ export class Product extends BaseEntity {
 
     @OneToMany(() => CartItem, cartItem => cartItem.product)
     cartItems: CartItem[];
+
+    @ManyToOne(() => Supplier, supplier => supplier.products, { nullable: true })
+    supplier: Supplier;
+
+    @ManyToOne(() => Brand, brand => brand.products, { nullable: true })
+    brand: Brand;
 }

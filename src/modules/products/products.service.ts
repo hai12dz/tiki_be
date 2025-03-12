@@ -48,4 +48,51 @@ export class ProductsService {
             items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true }),
         };
     }
+
+    async filterProduct(query: any): Promise<Pagination<ProductDto>> {
+
+        let { current = 1, pageSize = 10, nameCategory, nameBrand, nameSupplier, priceBottom, priceTop } = query;
+
+        // Chuyển đổi kiểu dữ liệu cho `current` và `pageSize`
+        const page = Number(current) || 1;
+        const limit = Number(pageSize) || 10;
+
+        const qb = this.productRepository.createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category')
+            .leftJoinAndSelect('product.supplier', 'supplier')
+            .leftJoinAndSelect('product.brand', 'brand')
+            ;
+
+        // 🔹 Search theo `mainText`
+        if (nameCategory) {
+            qb.andWhere('category.name LIKE :nameCategory', { nameCategory: `%${nameCategory}%` });
+        }
+
+        // 🔹 Filter (lọc theo `category`)
+        if (nameBrand) {
+            qb.andWhere('brand.name = :nameBrand', { nameBrand });
+        }
+
+        // 🔹 Filter (lọc theo `category`)
+        if (nameSupplier) {
+            qb.andWhere('supplier.name = :nameSupplier', { nameSupplier });
+        }
+
+        if (priceBottom && priceTop) {
+            qb.andWhere('product.price between :priceBottom and  :priceTop', { priceBottom, priceTop });
+        }
+
+
+        // 🔹 Phân trang bằng `nestjs-typeorm-paginate`
+        const paginatedResult = await paginate<Product>(qb, { page, limit });
+        // Chuyển đổi dữ liệu sang `ProductDto`
+        return {
+            ...paginatedResult,
+            items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true }),
+        };
+
+
+
+    }
+
 }

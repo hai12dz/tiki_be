@@ -3,6 +3,7 @@ import { CategoriesService } from './categories.service';
 import { ApiTags } from '@nestjs/swagger';
 
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { Category } from 'src/entities/category.entity';
 
 @ApiTags('Categories')
 @Controller('/api/v1/database')
@@ -24,6 +25,10 @@ export class CategoriesController {
 
 
 
+    @Get('/fullCategory')
+    async getFullCategories(): Promise<BaseResponseDto<Category[]>> {
+        return await this.categoriesService.getFullCategories();
+    }
 
 
 }
