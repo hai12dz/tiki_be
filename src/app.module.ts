@@ -10,6 +10,9 @@ import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { CartItem } from './entities/cart-item.entity';
 import { RolePermission } from './entities/role-permission.entity';
+import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/category/categories.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -28,6 +31,8 @@ import { RolePermission } from './entities/role-permission.entity';
         synchronize: true, // Không dùng trong production
       }),
     }),
+    AuthModule, CategoriesModule, ProductsModule
+
   ],
 })
 export class AppModule { }

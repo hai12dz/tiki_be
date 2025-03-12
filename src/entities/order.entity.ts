@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { OrderItem } from './order-item.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity('orders')
-export class Order {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Order extends BaseEntity {
+
 
     @ManyToOne(() => User, user => user.orders)
     customer: User;
