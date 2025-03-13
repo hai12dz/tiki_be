@@ -49,50 +49,52 @@ export class ProductsService {
         };
     }
 
-    async filterProduct(query: any): Promise<Pagination<ProductDto>> {
 
+    async filterProduct(query: any): Promise<Pagination<ProductDto>> {
         let { current = 1, pageSize = 10, nameCategory, nameBrand, nameSupplier, priceBottom, priceTop } = query;
 
-        // Chuyển đổi kiểu dữ liệu cho `current` và `pageSize`
         const page = Number(current) || 1;
         const limit = Number(pageSize) || 10;
 
         const qb = this.productRepository.createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category')
             .leftJoinAndSelect('product.supplier', 'supplier')
-            .leftJoinAndSelect('product.brand', 'brand')
-            ;
+            .leftJoinAndSelect('product.brand', 'brand');
 
-        // 🔹 Search theo `mainText`
+
+
         if (nameCategory) {
-            qb.andWhere('category.name LIKE :nameCategory', { nameCategory: `%${nameCategory}%` });
+            const categoryList = nameCategory.split(',').map(nameCategory => nameCategory.trim()); // Tách danh sách
+            qb.andWhere('category.name IN (:...categoryList)', { categoryList });
         }
-
-        // 🔹 Filter (lọc theo `category`)
+        // 🔹 Filter theo nhiều brand
         if (nameBrand) {
-            qb.andWhere('brand.name = :nameBrand', { nameBrand });
+            const brandList = nameBrand.split(',').map(brand => brand.trim()); // Tách danh sách
+            qb.andWhere('brand.name IN (:...brandList)', { brandList });
         }
 
-        // 🔹 Filter (lọc theo `category`)
+        // 🔹 Filter theo nhiều supplier
         if (nameSupplier) {
-            qb.andWhere('supplier.name = :nameSupplier', { nameSupplier });
+            const supplierList = nameSupplier.split(',').map(supplier => supplier.trim()); // Tách danh sách
+            qb.andWhere('supplier.name IN (:...supplierList)', { supplierList });
         }
 
+        // 🔹 Filter theo giá
         if (priceBottom && priceTop) {
-            qb.andWhere('product.price between :priceBottom and  :priceTop', { priceBottom, priceTop });
+            qb.andWhere('product.price BETWEEN :priceBottom AND :priceTop', { priceBottom, priceTop });
         }
-
 
         // 🔹 Phân trang bằng `nestjs-typeorm-paginate`
         const paginatedResult = await paginate<Product>(qb, { page, limit });
-        // Chuyển đổi dữ liệu sang `ProductDto`
+
         return {
             ...paginatedResult,
             items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true }),
         };
-
-
-
     }
+
+
+
+
 
 }
