@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from '../../entities/product.entity';
 import { plainToInstance } from 'class-transformer';
 import { ProductDto } from 'src/common/dto/product.dto';
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import { IdInvalidException } from 'src/common/exceptions/custom/id-invalid.exception';
+import { BaseResponseDto } from 'src/common/dto/base-response.dto';
 
 @Injectable()
 export class ProductsService {
@@ -92,6 +94,22 @@ export class ProductsService {
             items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true }),
         };
     }
+
+
+    async fetchProductById(query: string) {
+        const res = await this.productRepository.findOne({
+            where: { id: parseInt(query, 10) }
+        });
+
+        if (!res) {
+            return new BaseResponseDto<Product>(HttpStatus.OK, "Không tìm thấy sản phẩm!", res!);
+        }
+
+        return new BaseResponseDto<Product>(HttpStatus.OK, "Success!", res!);
+    }
+
+
+
 
 
 

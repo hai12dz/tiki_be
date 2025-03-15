@@ -11,6 +11,9 @@ export class Supplier extends BaseEntity {
     @Column()
     contactInfo: string;
 
+    @Column()
+    logo: string;
+
     @OneToMany(() => Product, product => product.supplier)
     products: Product[];
 }

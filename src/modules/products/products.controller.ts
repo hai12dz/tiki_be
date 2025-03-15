@@ -1,24 +1,33 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ProductDto } from 'src/common/dto/product.dto';
+import { Product } from 'src/entities/product.entity';
 
 @Controller('/api/v1')
 export class ProductController {
     constructor(private readonly productsService: ProductsService) { }
 
     @Get('/book')
-    async getBooks(@Query() query: any) {
+    async getBooks(@Query() query: string) {
         const books = await this.productsService.getProducts(query);
-        return new BaseResponseDto<Pagination<ProductDto>>(HttpStatus.ACCEPTED, "Success", books);
+        return new BaseResponseDto<Pagination<ProductDto>>(HttpStatus.OK, "Success", books);
     }
 
 
     @Get('/filterBook')
-    async filterProduct(@Query() query: any) {
+    async filterProduct(@Query() query: string) {
         const books = await this.productsService.filterProduct(query);
-        return new BaseResponseDto<Pagination<ProductDto>>(HttpStatus.ACCEPTED, "Success", books);
+        return new BaseResponseDto<Pagination<ProductDto>>(HttpStatus.OK, "Success", books);
     }
+
+
+    @Get('/book/:id')
+    async getBookById(@Param('id') id: string) {
+
+        return await this.productsService.fetchProductById(id);
+    }
+
 
 }

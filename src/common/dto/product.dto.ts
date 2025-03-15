@@ -4,7 +4,7 @@ import { Exclude, Expose } from 'class-transformer';
 export class ProductDto {
     @Expose()
 
-    _id: string;
+    id: string;
     @Expose()
 
     thumbnail: string;
