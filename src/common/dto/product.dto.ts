@@ -1,5 +1,7 @@
 
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { Supplier } from 'src/entities/supplier.entity';
+import { SupplierDto } from './supplier.dto';
 
 export class ProductDto {
     @Expose()
@@ -22,6 +24,9 @@ export class ProductDto {
     price: number;
     @Expose()
 
+    promotion: number;
+    @Expose()
+
     sold: number;
 
     @Expose()
@@ -35,6 +40,11 @@ export class ProductDto {
 
     @Expose()
     updatedAt: Date;
+
+    @Expose()
+    @Type(() => SupplierDto)
+    supplier: SupplierDto;
+
 
 }
 

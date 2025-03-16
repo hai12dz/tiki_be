@@ -32,7 +32,7 @@ export class Product extends BaseEntity {
     quantity: number;
 
     @Column()
-    promotion: string
+    promotion: number
 
     @ManyToOne(() => Category, category => category.products)
     category: Category;

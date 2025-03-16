@@ -15,7 +15,7 @@ export class SupplierService {
 
     async getSuppliers(): Promise<BaseResponseDto<Supplier[]>> {
         const suppliers = await this.supplierRepository.find();
-        return new BaseResponseDto<Supplier[]>(HttpStatus.ACCEPTED, 'Success', suppliers);
+        return new BaseResponseDto<Supplier[]>(HttpStatus.OK, 'Success', suppliers);
     }
 
 

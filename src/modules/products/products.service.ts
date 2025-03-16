@@ -20,10 +20,11 @@ export class ProductsService {
 
         // Chuyển đổi kiểu dữ liệu cho `current` và `pageSize`
         const page = Number(current) || 1;
-        const limit = Number(pageSize) || 10;
+        const limit = Number(pageSize) || 10
 
         const qb = this.productRepository.createQueryBuilder('product')
-            .leftJoinAndSelect('product.category', 'category');
+            .leftJoinAndSelect('product.category', 'category')
+            .leftJoinAndSelect('product.supplier', 'supplier'); // ✅ Thêm JOIN supplier
 
         // 🔹 Search theo `mainText`
         if (mainText) {
@@ -38,17 +39,20 @@ export class ProductsService {
         // 🔹 Sắp xếp (`sort`)
         if (sort) {
             const order = sort.startsWith('-') ? 'DESC' : 'ASC';
-            const field = sort.replace(/^-/, ''); // Loại bỏ dấu '-' nếu có
+            const field = sort.replace(/^-/, '');
             qb.orderBy(`product.${field}`, order as 'ASC' | 'DESC');
         }
 
         // 🔹 Phân trang bằng `nestjs-typeorm-paginate`
         const paginatedResult = await paginate<Product>(qb, { page, limit });
-        // Chuyển đổi dữ liệu sang `ProductDto`
+
+        // ✅ Chuyển đổi dữ liệu sang `ProductDto`
         return {
             ...paginatedResult,
-            items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true }),
+            items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true, enableImplicitConversion: true }),
+
         };
+
     }
 
 
@@ -95,17 +99,24 @@ export class ProductsService {
         };
     }
 
-
     async fetchProductById(query: string) {
-        const res = await this.productRepository.findOne({
-            where: { id: parseInt(query, 10) }
-        });
+        const res = await this.productRepository.createQueryBuilder('product')
+            .leftJoinAndSelect('product.supplier', 'supplier') // ✅ JOIN bảng supplier
+            .where('product.id = :id', { id: parseInt(query, 10) })
+            .getOne(); // Lấy 1 sản phẩm duy nhất
 
         if (!res) {
-            return new BaseResponseDto<Product>(HttpStatus.OK, "Không tìm thấy sản phẩm!", res!);
+            return new BaseResponseDto<ProductDto>(HttpStatus.OK, "Không tìm thấy sản phẩm!");
         }
 
-        return new BaseResponseDto<Product>(HttpStatus.OK, "Success!", res!);
+        return new BaseResponseDto<ProductDto>(
+            HttpStatus.OK,
+            "Success!",
+            plainToInstance(ProductDto, res, {
+                excludeExtraneousValues: true,
+                enableImplicitConversion: true
+            })
+        );
     }
 
 

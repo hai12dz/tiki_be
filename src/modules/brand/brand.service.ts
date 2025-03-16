@@ -14,7 +14,7 @@ export class BrandService {
 
     async getBrands(): Promise<BaseResponseDto<Brand[]>> {
         const brands = await this.brandRepository.find(); // Thêm await
-        return new BaseResponseDto<Brand[]>(HttpStatus.ACCEPTED, 'Success', brands);
+        return new BaseResponseDto<Brand[]>(HttpStatus.OK, 'Success', brands);
     }
 
 
