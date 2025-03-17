@@ -10,7 +10,6 @@ import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { CartItem } from './entities/cart-item.entity';
 import { RolePermission } from './entities/role-permission.entity';
-import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/category/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { Supplier } from './entities/supplier.entity';
@@ -18,6 +17,7 @@ import { Brand } from './entities/brand.entity';
 import { BrandsModule } from './modules/brand/brand.module';
 import { SupplierModule } from './modules/supplier/supplier.module';
 import { ViewedProduct } from './entities/viewed.entity';
+import { UserModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import { ViewedProduct } from './entities/viewed.entity';
         synchronize: true, // Không dùng trong production
       }),
     }),
-    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule
+    CategoriesModule, ProductsModule, BrandsModule, SupplierModule, UserModule
 
   ],
 })

@@ -19,6 +19,9 @@ export class User extends BaseEntity {
     @Column()
     fullName: string;
 
+    @Column()
+    phone: string
+
     @ManyToOne(() => Role, role => role.id, { nullable: true })
     @JoinColumn({ name: 'role_id' })
     role: Role | null;
@@ -38,6 +41,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => CartItem, cartItem => cartItem.user)
     cartItems: CartItem[];
-    @Column({ type: 'varchar', nullable: true })  // ✅ Sửa kiểu dữ liệu
+    @Column({ type: 'varchar', nullable: true })
     refreshToken?: string | null;
+
 }
