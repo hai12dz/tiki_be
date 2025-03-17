@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Product } from '../../entities/product.entity';
 import { plainToInstance } from 'class-transformer';
 import { ProductDto } from 'src/common/dto/product.dto';
@@ -122,6 +122,9 @@ export class ProductsService {
 
 
 
+    async getProductsByIds(productIds: number[]): Promise<Product[]> {
+        return this.productRepository.findBy({ id: In(productIds) });
+    }
 
 
 

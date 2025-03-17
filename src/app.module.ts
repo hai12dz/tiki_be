@@ -17,6 +17,7 @@ import { Supplier } from './entities/supplier.entity';
 import { Brand } from './entities/brand.entity';
 import { BrandsModule } from './modules/brand/brand.module';
 import { SupplierModule } from './modules/supplier/supplier.module';
+import { ViewedProduct } from './entities/viewed.entity';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { SupplierModule } from './modules/supplier/supplier.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, Supplier, Brand],
+        entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ViewedProduct, Supplier, Brand],
         synchronize: true, // Không dùng trong production
       }),
     }),

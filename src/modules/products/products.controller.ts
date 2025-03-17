@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
@@ -27,6 +27,15 @@ export class ProductController {
     async getBookById(@Param('id') id: string) {
 
         return await this.productsService.fetchProductById(id);
+    }
+
+
+    @Post("/viewed")
+    async getViewedProducts(@Body("productIds") productIds: number[]) {
+        if (!productIds || productIds.length === 0) return [];
+        const books = await this.productsService.getProductsByIds(productIds);
+
+        return new BaseResponseDto<Product[]>(HttpStatus.OK, "Success", books);
     }
 
 

@@ -6,6 +6,7 @@ import { CartItem } from './cart-item.entity';
 import { BaseEntity } from './base.entity';
 import { Supplier } from './supplier.entity';
 import { Brand } from './brand.entity';
+import { ViewedProduct } from './viewed.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -54,4 +55,10 @@ export class Product extends BaseEntity {
 
     @ManyToOne(() => Brand, brand => brand.products, { nullable: true })
     brand: Brand;
+
+
+    @OneToMany(() => ViewedProduct, (viewedProduct) => viewedProduct.product)
+    viewedProducts: ViewedProduct[];
+
+
 }
