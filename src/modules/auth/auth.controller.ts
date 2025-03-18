@@ -66,11 +66,8 @@ export class AuthController {
     @Get('/account')
     @UseGuards(JwtAuthGuard)
     async getAccount(@Req() req: Request) {
-        console.log('Headers:', req.headers);
-        console.log('User:', (req as any).user);
         const userId = (req as any).user.userId; // Lấy userId từ token
         const user = await this.authService.getUserById(userId);
-
         return new BaseResponseDto<any>(HttpStatus.OK, "Success Data", { user });
     }
 
