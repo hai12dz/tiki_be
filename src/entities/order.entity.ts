@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'ty
 import { User } from './user.entity';
 import { OrderItem } from './order-item.entity';
 import { BaseEntity } from './base.entity';
-
+import { History } from './history.entity';
 @Entity('orders')
 export class Order extends BaseEntity {
 
@@ -21,4 +21,26 @@ export class Order extends BaseEntity {
 
     @OneToMany(() => OrderItem, orderItem => orderItem.order)
     orderItems: OrderItem[];
+
+
+    @Column()
+    name: string;
+
+    @Column()
+    phone: string;
+
+    @Column()
+    address: string;
+
+    @Column({ type: "enum", enum: ["COD", "ONLINE"], default: "COD" })
+    type: string;
+
+
+    @Column({ type: "json" }) // Lưu mảng `detail` dạng JSON
+    detail: any;
+
+    @OneToMany(() => History, (history) => history.order)
+    histories: History[];
+
+
 }

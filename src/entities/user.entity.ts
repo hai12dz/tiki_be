@@ -5,7 +5,7 @@ import { Product } from './product.entity';
 import { CartItem } from './cart-item.entity';
 import { BaseEntity } from './base.entity';
 import { ViewedProduct } from './viewed.entity';
-
+import { History } from './history.entity';
 @Entity('users')
 export class User extends BaseEntity {
 
@@ -21,6 +21,10 @@ export class User extends BaseEntity {
 
     @Column()
     phone: string
+
+    @Column({ default: "default.png" })
+    avatar: string;
+
 
     @ManyToOne(() => Role, role => role.id, { nullable: true })
     @JoinColumn({ name: 'role_id' })
@@ -43,5 +47,9 @@ export class User extends BaseEntity {
     cartItems: CartItem[];
     @Column({ type: 'varchar', nullable: true })
     refreshToken?: string | null;
+
+    @OneToMany(() => History, (history) => history.user)
+    histories: History[];
+
 
 }
