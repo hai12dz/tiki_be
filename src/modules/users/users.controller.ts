@@ -1,7 +1,9 @@
-import { Controller, Post, Body, HttpStatus } from "@nestjs/common";
+import { Controller, Post, Body, HttpStatus, Put, Req, Res } from "@nestjs/common";
 import { UserService } from "./users.service";
 import { BaseResponseDto } from "src/common/dto/base-response.dto";
 import { User } from "src/entities/user.entity";
+import { UpdateUserDto } from "src/common/dto/update-user.dto";
+import { ChangePasswordDto } from "src/common/dto/change-password.dto";
 
 @Controller("/users")
 export class UserController {
@@ -19,4 +21,38 @@ export class UserController {
         return new BaseResponseDto<User | string>(HttpStatus.CREATED, "Login Success", data)
 
     }
+
+
+    @Put("/update-user")
+    async updateUser(@Body() updateUserDto: UpdateUserDto) {
+        const updatedUser = await this.userService.updateUser(updateUserDto);
+        return {
+            statusCode: 200,
+            message: 'Cập nhật user thành công!',
+            data: updatedUser,
+        };
+    }
+
+
+    @Post('/change-password')
+    async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+        const data = await this.userService.changePassword(changePasswordDto);
+        if (data != null) {
+            return {
+                statusCode: 200,
+                message: 'Đổi mật khẩu thành công!',
+                data: 'hello'
+
+            };
+        }
+
+    }
+
+
+
+
+
+
+
+
 }

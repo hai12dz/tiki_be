@@ -29,7 +29,8 @@ export class OrderService {
             type: dto.type,
             totalPrice: dto.totalPrice,
             detail: dto.detail, // Lưu dưới dạng JSON
-            status: 'pending',
+            paymentStatus: 'completed',
+            paymentRef: dto.paymentRef
         });
 
         return await this.orderRepo.save(newOrder);

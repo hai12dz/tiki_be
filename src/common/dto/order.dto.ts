@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsArray, IsEnum } from "class-validator";
+import { IsString, IsNumber, IsArray, IsEnum, IsOptional } from "class-validator";
 
 export class OrderDetailDto {
     @IsString()
@@ -11,6 +11,11 @@ export class OrderDetailDto {
     bookName: string;
 }
 
+export enum PaymentType {
+    COD = "COD",
+    ONLINE = "BANKING",
+}
+
 export class CreateOrderDto {
     @IsString()
     name: string;
@@ -21,12 +26,16 @@ export class CreateOrderDto {
     @IsString()
     address: string;
 
-    @IsEnum(["COD", "ONLINE"])
-    type: "COD" | "ONLINE";
+    @IsEnum(PaymentType)
+    type: PaymentType;
 
     @IsNumber()
     totalPrice: number;
 
     @IsArray()
     detail: OrderDetailDto[];
+
+    @IsOptional()  // Chỉ cần khi thanh toán ONLINE
+    @IsString()
+    paymentRef?: string;
 }

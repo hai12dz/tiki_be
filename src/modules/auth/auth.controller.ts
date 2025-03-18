@@ -37,17 +37,19 @@ export class AuthController {
     @Post('/logout')
     @UseGuards(JwtAuthGuard)
     async logout(@Req() req: Request, @Res() res: Response) {
-        const userId = (req as any).user['sub'];
+        const userId = (req as any).user.userId;
         await this.authService.logout(userId);
-
         res.cookie('refreshToken', '', {
             httpOnly: true,
             secure: true,
             path: '/',
             maxAge: 0,
         });
-
-        return res.json({ message: 'Logged out successfully' });
+        return res.status(200).json({
+            message: 'Đăng xuất thành công',
+            data: "success",
+            status: 200
+        });
     }
 
     private setRefreshTokenCookie(res: Response, refreshToken: string) {
@@ -71,7 +73,6 @@ export class AuthController {
 
         return new BaseResponseDto<any>(HttpStatus.OK, "Success Data", { user });
     }
-
 
 
 

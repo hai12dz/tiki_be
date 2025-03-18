@@ -13,15 +13,16 @@ export class Order extends BaseEntity {
     @Column('decimal', { precision: 10, scale: 2 })
     totalPrice: number;
 
-    @Column({ type: 'enum', enum: ['pending', 'completed', 'cancelled'], default: 'pending' })
-    status: string;
+    @Column({ type: 'enum', enum: ['pending', 'completed', 'cancelled'], default: 'completed' })
+    paymentStatus: string;
 
     @Column({ default: true })
     isActive: boolean;
 
     @OneToMany(() => OrderItem, orderItem => orderItem.order)
     orderItems: OrderItem[];
-
+    @Column({ nullable: true })
+    paymentRef: string;
 
     @Column()
     name: string;
@@ -32,7 +33,7 @@ export class Order extends BaseEntity {
     @Column()
     address: string;
 
-    @Column({ type: "enum", enum: ["COD", "ONLINE"], default: "COD" })
+    @Column({ type: "enum", enum: ["COD", "BANKING"], default: "COD" })
     type: string;
 
 

@@ -21,25 +21,29 @@ import { UserModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrderModule } from './modules/orders/orders.module';
 import { History } from './entities/history.entity';
+import { UploadModule } from './modules/upload/upload.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // Load biến môi trường từ .env
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ViewedProduct, Supplier, Brand, History],
-        synchronize: true, // Không dùng trong production
-      }),
+  imports: [MulterModule.register({
+    dest: 'public/images/avatar', // Đặt thư mục mặc định
+  }),
+  ConfigModule.forRoot({ isGlobal: true }), // Load biến môi trường từ .env
+  TypeOrmModule.forRootAsync({
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: (configService: ConfigService) => ({
+      type: 'mysql',
+      host: configService.get<string>('DB_HOST'),
+      port: configService.get<number>('DB_PORT'),
+      username: configService.get<string>('DB_USERNAME'),
+      password: configService.get<string>('DB_PASSWORD'),
+      database: configService.get<string>('DB_DATABASE'),
+      entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ViewedProduct, Supplier, Brand, History],
+      synchronize: true, // Không dùng trong production
     }),
-    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule, UserModule, OrderModule
+  }),
+    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule, UserModule, OrderModule, UploadModule
 
   ],
 })

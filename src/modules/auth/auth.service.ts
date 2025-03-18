@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -72,8 +72,11 @@ export class AuthService {
     }
 
     async logout(userId: number) {
+        if (!userId) throw new BadRequestException('User ID không hợp lệ');
+
         await this.userRepo.update(userId, { refreshToken: null });
     }
+
 
     private async generateTokens(user: User) {
         const payload = { sub: user.id, email: user.email, role: user.role!.name };

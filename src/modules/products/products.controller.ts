@@ -39,4 +39,19 @@ export class ProductController {
     }
 
 
+
+
+
+    @Get('/file/upload')
+    async uploadBook(@Param('id') id: string) {
+
+        return await this.productsService.fetchProductById(id);
+
+
+    }
+
+
+
+
+
 }

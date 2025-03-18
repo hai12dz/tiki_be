@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:3000', // Toàn bộ đường dẫn phía sau đều được chấp nhận
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'delay'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'delay', 'upload-type'],
     credentials: true,
   });
   const config = new DocumentBuilder()
