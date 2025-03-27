@@ -1,12 +1,13 @@
 import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
-import { OrderItem } from './order-item.entity';
-import { CartItem } from './cart-item.entity';
+import { OrderItem } from './order.item.entity';
+import { CartItem } from './cart.entity';
 import { BaseEntity } from './base.entity';
 import { Supplier } from './supplier.entity';
 import { Brand } from './brand.entity';
-import { ViewedProduct } from './viewed.entity';
+import { ProductPromotion } from './promotion.entity';
+import { ProductReview } from './review.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -25,6 +26,9 @@ export class Product extends BaseEntity {
 
     @Column('decimal', { precision: 10, scale: 2 })
     price: number;
+
+    @Column()
+    rating_avg: number
 
     @Column({ default: 0 })
     sold: number;
@@ -46,6 +50,12 @@ export class Product extends BaseEntity {
 
     @OneToMany(() => OrderItem, orderItem => orderItem.product)
     orderItems: OrderItem[];
+    @OneToMany(() => ProductPromotion, promotion => promotion.product)
+    promotions: ProductPromotion[];
+
+    @OneToMany(() => ProductReview, review => review.product)
+    reviews: ProductReview[];
+
 
     @OneToMany(() => CartItem, cartItem => cartItem.product)
     cartItems: CartItem[];
@@ -57,8 +67,7 @@ export class Product extends BaseEntity {
     brand: Brand;
 
 
-    @OneToMany(() => ViewedProduct, (viewedProduct) => viewedProduct.product)
-    viewedProducts: ViewedProduct[];
+
 
 
 }

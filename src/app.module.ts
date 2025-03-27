@@ -7,22 +7,23 @@ import { Permission } from './entities/permission.entity';
 import { Product } from './entities/product.entity';
 import { Category } from './entities/category.entity';
 import { Order } from './entities/order.entity';
-import { OrderItem } from './entities/order-item.entity';
-import { CartItem } from './entities/cart-item.entity';
-import { RolePermission } from './entities/role-permission.entity';
+import { OrderItem } from './entities/order.item.entity';
+import { CartItem } from './entities/cart.entity';
+import { RolePermission } from './entities/role.permission.entity';
 import { CategoriesModule } from './modules/category/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { Supplier } from './entities/supplier.entity';
 import { Brand } from './entities/brand.entity';
 import { BrandsModule } from './modules/brand/brand.module';
 import { SupplierModule } from './modules/supplier/supplier.module';
-import { ViewedProduct } from './entities/viewed.entity';
 import { UserModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrderModule } from './modules/orders/orders.module';
 import { History } from './entities/history.entity';
 import { UploadModule } from './modules/upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { ProductPromotion } from './entities/promotion.entity';
+import { ProductReview } from './entities/review.entity';
 
 @Module({
   imports: [MulterModule.register({
@@ -39,7 +40,7 @@ import { MulterModule } from '@nestjs/platform-express';
       username: configService.get<string>('DB_USERNAME'),
       password: configService.get<string>('DB_PASSWORD'),
       database: configService.get<string>('DB_DATABASE'),
-      entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ViewedProduct, Supplier, Brand, History],
+      entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ProductPromotion, ProductReview, Supplier, Brand, History],
       synchronize: true, // Không dùng trong production
     }),
   }),

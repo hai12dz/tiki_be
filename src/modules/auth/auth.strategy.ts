@@ -17,9 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
                     if (!token) {
                         token = req.cookies?.refresh_token;
                         if (!token) return null; // Không có token nào
-                        console.log('🔄 Using refresh token from cookies:', token);
                     } else {
-                        console.log('🛡️ Using access token from headers:', token);
                     }
 
                     return token;

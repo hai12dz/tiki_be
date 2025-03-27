@@ -1,11 +1,11 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { BrandService } from './brand.service';
 
-@Controller('/api/v1/brand')
+@Controller('/brand')
 export class BrandController {
     constructor(private readonly productsService: BrandService) { }
 
-    @Get('/name-brand')
+    @Get('/name')
     async getBrands() {
         return await this.productsService.getBrands()
     }

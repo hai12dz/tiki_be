@@ -1,9 +1,9 @@
 import { Controller, Post, Body, HttpStatus, Put, Req, Res } from "@nestjs/common";
 import { UserService } from "./users.service";
-import { BaseResponseDto } from "src/common/dto/base-response.dto";
+import { BaseResponseDto } from "src/common/dto/base.response.dto";
 import { User } from "src/entities/user.entity";
-import { UpdateUserDto } from "src/common/dto/update-user.dto";
-import { ChangePasswordDto } from "src/common/dto/change-password.dto";
+import { UpdateUserDto } from "src/common/dto/user.dto";
+import { ChangePasswordDto } from "src/common/dto/password.dto";
 
 @Controller("/users")
 export class UserController {

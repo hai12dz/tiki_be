@@ -3,9 +3,9 @@ import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from '../../common/dto/auth.dto';
 
 import { Response, Request } from 'express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard'
+import { JwtAuthGuard } from '../../common/guards/jwt.auth.guard'
 import { ApiOperation } from '@nestjs/swagger';
-import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { BaseResponseDto } from 'src/common/dto/base.response.dto';
 import { User } from 'src/entities/user.entity';
 
 

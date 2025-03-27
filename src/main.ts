@@ -2,18 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { GlobalExceptionFilter } from './common/exceptions/http-exception.filter';
+import { GlobalExceptionFilter } from './common/exceptions/http.exception.filter';
 import * as express from 'express';
 import * as path from 'path';
 import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3000', // Toàn bộ đường dẫn phía sau đều được chấp nhận
+    origin: ['http://localhost:3000', 'http://localhost:3001'], // Định nghĩa danh sách các origin được phép
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'delay', 'upload-type'],
     credentials: true,
   });
+
   const config = new DocumentBuilder()
     .setTitle('Tiki RBAC API')
     .setDescription('API cho hệ thống phân quyền Tiki Clone')

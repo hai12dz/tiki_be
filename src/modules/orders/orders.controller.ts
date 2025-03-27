@@ -1,14 +1,14 @@
 import { Controller, Post, Body, Get, UseGuards, Request, HttpStatus, Req } from "@nestjs/common";
 import { OrderService } from "./orders.service";
 import { CreateOrderDto } from "../../common/dto/order.dto";
-import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
-import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { JwtAuthGuard } from "src/common/guards/jwt.auth.guard";
+import { BaseResponseDto } from 'src/common/dto/base.response.dto';
 
-@Controller("/api/v1")
+@Controller("/orders")
 export class OrderController {
     constructor(private readonly orderService: OrderService) { }
 
-    @Post("/order")
+    @Post()
     @UseGuards(JwtAuthGuard)
     async createOrder(@Req() req: Request, @Body() dto: CreateOrderDto) {
         const userId = (req as any).user.userId;

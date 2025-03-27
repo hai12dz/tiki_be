@@ -5,8 +5,8 @@ import { Product } from '../../entities/product.entity';
 import { plainToInstance } from 'class-transformer';
 import { ProductDto } from 'src/common/dto/product.dto';
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
-import { IdInvalidException } from 'src/common/exceptions/custom/id-invalid.exception';
-import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { IdInvalidException } from 'src/common/exceptions/custom/id.invalid.exception';
+import { BaseResponseDto } from 'src/common/dto/base.response.dto';
 
 @Injectable()
 export class ProductsService {

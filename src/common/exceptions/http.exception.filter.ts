@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import { BaseResponseDto } from '../dto/base-response.dto';
+import { BaseResponseDto } from '../dto/base.response.dto';
 import { QueryFailedError } from 'typeorm';
 
 @Catch()

@@ -2,10 +2,10 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColum
 import { Role } from './role.entity';
 import { Order } from './order.entity';
 import { Product } from './product.entity';
-import { CartItem } from './cart-item.entity';
+import { CartItem } from './cart.entity';
 import { BaseEntity } from './base.entity';
-import { ViewedProduct } from './viewed.entity';
 import { History } from './history.entity';
+import { ProductReview } from './review.entity';
 @Entity('users')
 export class User extends BaseEntity {
 
@@ -37,8 +37,8 @@ export class User extends BaseEntity {
     orders: Order[];
 
 
-    @OneToMany(() => ViewedProduct, viewed => viewed.user)
-    viewedProducts: ViewedProduct[];
+    @OneToMany(() => ProductReview, review => review.user)
+    reviews: ProductReview[];
 
     @OneToMany(() => Product, product => product.seller)
     products: Product[];
