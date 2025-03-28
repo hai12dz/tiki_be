@@ -9,10 +9,10 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://deploy-be-service.onrender.com'], // Định nghĩa danh sách các origin được phép
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'delay', 'upload-type'],
-    credentials: true,
+    origin: '*', // Cho phép tất cả các origin
+    methods: '*', // Cho phép tất cả các phương thức HTTP
+    allowedHeaders: '*', // Cho phép tất cả các headers
+    credentials: true, // Nếu cần gửi cookies
   });
 
   const config = new DocumentBuilder()
