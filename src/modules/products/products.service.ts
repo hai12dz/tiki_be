@@ -16,15 +16,17 @@ export class ProductsService {
     ) { }
 
     async getProducts(query: any): Promise<Pagination<ProductDto>> {
-        let { current = 1, pageSize = 10, mainText, sort, filter } = query;
+        let { current = 1, pageSize = 10, mainText, sort, filter, suppliers, brands, minRating, freeShipping, cheapPrice, fastDelivery } = query;
 
         // Chuyển đổi kiểu dữ liệu cho `current` và `pageSize`
         const page = Number(current) || 1;
-        const limit = Number(pageSize) || 10
+        const limit = Number(pageSize) || 10;
 
         const qb = this.productRepository.createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category')
-            .leftJoinAndSelect('product.supplier', 'supplier'); // ✅ Thêm JOIN supplier
+            .leftJoinAndSelect('product.supplier', 'supplier')
+            .leftJoinAndSelect('product.brand', 'brand')
+            .leftJoinAndSelect('product.promotions', 'promotions');
 
         // 🔹 Search theo `mainText`
         if (mainText) {
@@ -36,11 +38,78 @@ export class ProductsService {
             qb.andWhere('category.name = :filter', { filter });
         }
 
+        // 🔹 Filter theo suppliers (nếu có)
+        if (suppliers) {
+            const supplierIds = suppliers.split(',');
+            if (supplierIds.length > 0) {
+                qb.andWhere('supplier.id IN (:...supplierIds)', { supplierIds });
+            }
+        }
+
+        // 🔹 Filter theo brands (nếu có)
+        if (brands) {
+            const brandIds = brands.split(',');
+            if (brandIds.length > 0) {
+                qb.andWhere('brand.id IN (:...brandIds)', { brandIds });
+            }
+        }
+
+        // 🔹 Filter theo rating
+        if (minRating) {
+            qb.andWhere('product.rating_avg >= :minRating', { minRating: Number(minRating) });
+        }
+
+        // 🔹 Filter theo freeShipping
+        if (freeShipping === 'true') {
+            qb.andWhere('promotions.isFreeShip = :isFreeShip', { isFreeShip: true });
+        }
+
+        // 🔹 Filter theo cheapPrice
+        if (cheapPrice === 'true') {
+            qb.andWhere('promotions.isSuperCheap = :isSuperCheap', { isSuperCheap: true });
+        }
+
+        // 🔹 Filter theo fastDelivery
+        if (fastDelivery === 'true') {
+            qb.andWhere('promotions.isFastDelivery = :isFastDelivery', { isFastDelivery: true });
+        }
+
         // 🔹 Sắp xếp (`sort`)
         if (sort) {
-            const order = sort.startsWith('-') ? 'DESC' : 'ASC';
-            const field = sort.replace(/^-/, '');
-            qb.orderBy(`product.${field}`, order as 'ASC' | 'DESC');
+            // Đảm bảo sort là một chuỗi hợp lệ 
+            const sortCode = this.getSortCode(sort.toString().trim());
+
+            switch (sortCode) {
+                case 'popular':
+                    qb.orderBy('product.rating_avg', 'DESC');
+                    break;
+                case 'bestselling':
+                    qb.orderBy('product.sold', 'DESC');
+                    break;
+                case 'newest':
+                    qb.orderBy('product.createdAt', 'DESC');
+                    break;
+                case 'price-asc':
+                    qb.orderBy('product.price', 'ASC');
+                    break;
+                case 'price-desc':
+                    qb.orderBy('product.price', 'DESC');
+                    break;
+                default:
+                    // Kiểm tra xem có phải là tên trường hợp lệ không
+                    const order = sort.startsWith('-') ? 'DESC' : 'ASC';
+                    const field = sort.replace(/^-/, '');
+                    if (this.isValidField(field)) {
+                        qb.orderBy(`product.${field}`, order as 'ASC' | 'DESC');
+                    } else {
+                        // Mặc định nếu trường không hợp lệ
+                        qb.orderBy('product.createdAt', 'DESC');
+                    }
+                    break;
+            }
+        } else {
+            // Mặc định sắp xếp theo ngày tạo nếu không có tham số sort
+            qb.orderBy('product.createdAt', 'DESC');
         }
 
         // 🔹 Phân trang bằng `nestjs-typeorm-paginate`
@@ -50,14 +119,36 @@ export class ProductsService {
         return {
             ...paginatedResult,
             items: plainToInstance(ProductDto, paginatedResult.items, { excludeExtraneousValues: true, enableImplicitConversion: true }),
-
         };
+    }
 
+    // Hàm kiểm tra tên trường hợp lệ
+    private isValidField(field: string): boolean {
+        const validFields = ['id', 'mainText', 'price', 'sold', 'createdAt', 'rating_avg', 'author', 'promotion', 'quantity'];
+        return validFields.includes(field);
+    }
+
+    // Hàm chuyển đổi từ text hiển thị sang mã sort
+    private getSortCode(sortText: string): string {
+        switch (sortText) {
+            case 'Phổ biến':
+                return 'popular';
+            case 'Bán chạy':
+                return 'bestselling';
+            case 'Hàng mới':
+                return 'newest';
+            case 'Giá thấp đến cao':
+                return 'price-asc';
+            case 'Giá cao đến thấp':
+                return 'price-desc';
+            default:
+                return sortText; // Giữ nguyên giá trị nếu không khớp với các case trên
+        }
     }
 
 
     async filterProduct(query: any): Promise<Pagination<ProductDto>> {
-        let { current = 1, pageSize = 10, nameCategory, nameBrand, nameSupplier, priceBottom, priceTop } = query;
+        let { current = 1, pageSize = 10, isFreeShip, isSuperCheap, isFastDelivery, nameCategory, nameBrand, nameSupplier, priceBottom, priceTop } = query;
 
         const page = Number(current) || 1;
         const limit = Number(pageSize) || 10;
@@ -65,14 +156,27 @@ export class ProductsService {
         const qb = this.productRepository.createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category')
             .leftJoinAndSelect('product.supplier', 'supplier')
-            .leftJoinAndSelect('product.brand', 'brand');
+            .leftJoinAndSelect('product.brand', 'brand')
+            .leftJoinAndSelect('product.promotions', 'promotions');
 
+        // 🔹 Filter theo promotion flags
+        if (isFreeShip === 'true') {
+            qb.andWhere('promotions.isFreeShip = :isFreeShip', { isFreeShip: true });
+        }
 
+        if (isSuperCheap === 'true') {
+            qb.andWhere('promotions.isSuperCheap = :isSuperCheap', { isSuperCheap: true });
+        }
+
+        if (isFastDelivery === 'true') {
+            qb.andWhere('promotions.isFastDelivery = :isFastDelivery', { isFastDelivery: true });
+        }
 
         if (nameCategory) {
-            const categoryList = nameCategory.split(',').map(nameCategory => nameCategory.trim()); // Tách danh sách
+            const categoryList = nameCategory.split(',').map(nameCategory => nameCategory.trim());
             qb.andWhere('category.name IN (:...categoryList)', { categoryList });
         }
+
         // 🔹 Filter theo nhiều brand
         if (nameBrand) {
             const brandList = nameBrand.split(',').map(brand => brand.trim()); // Tách danh sách
@@ -119,14 +223,7 @@ export class ProductsService {
         );
     }
 
-
-
-
     async getProductsByIds(productIds: number[]): Promise<Product[]> {
         return this.productRepository.findBy({ id: In(productIds) });
     }
-
-
-
-
 }
