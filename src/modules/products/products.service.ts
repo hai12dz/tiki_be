@@ -42,7 +42,7 @@ export class ProductsService {
         if (suppliers) {
             const supplierIds = suppliers.split(',');
             if (supplierIds.length > 0) {
-                qb.andWhere('supplier.id IN (:...supplierIds)', { supplierIds });
+                qb.andWhere('supplier.name IN (:...supplierIds)', { supplierIds });
             }
         }
 
@@ -50,7 +50,7 @@ export class ProductsService {
         if (brands) {
             const brandIds = brands.split(',');
             if (brandIds.length > 0) {
-                qb.andWhere('brand.id IN (:...brandIds)', { brandIds });
+                qb.andWhere('brand.name IN (:...brandIds)', { brandIds });
             }
         }
 

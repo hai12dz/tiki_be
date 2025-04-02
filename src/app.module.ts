@@ -24,6 +24,8 @@ import { UploadModule } from './modules/upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ProductPromotion } from './entities/promotion.entity';
 import { ProductReview } from './entities/review.entity';
+import { SearchModule } from './modules/search/search.module';
+import { SearchSuggestion } from './entities/search.suggestion';
 
 @Module({
   imports: [MulterModule.register({
@@ -40,11 +42,12 @@ import { ProductReview } from './entities/review.entity';
       username: configService.get<string>('DB_USERNAME'),
       password: configService.get<string>('DB_PASSWORD'),
       database: configService.get<string>('DB_DATABASE'),
-      entities: [User, Role, Permission, Product, Category, Order, OrderItem, CartItem, RolePermission, ProductPromotion, ProductReview, Supplier, Brand, History],
+      entities: [SearchSuggestion, User, Role, Permission, Product,
+        Category, Order, OrderItem, CartItem, RolePermission, ProductPromotion, ProductReview, Supplier, Brand, History],
       synchronize: true, // Không dùng trong production
     }),
   }),
-    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule, UserModule, OrderModule, UploadModule
+    AuthModule, CategoriesModule, ProductsModule, BrandsModule, SupplierModule, UserModule, OrderModule, UploadModule, SearchModule
 
   ],
 })
