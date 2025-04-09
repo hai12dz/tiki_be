@@ -31,6 +31,8 @@ export class ProductDto {
 
     @Expose()
     quantity: number;
+    @Expose()
+    rating_avg: number;
 
     @Expose()
     category: string;
@@ -44,6 +46,9 @@ export class ProductDto {
     @Expose()
     @Type(() => SupplierDto)
     supplier: SupplierDto;
+
+
+
 
 
 }
