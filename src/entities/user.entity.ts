@@ -52,4 +52,9 @@ export class User extends BaseEntity {
     histories: History[];
 
 
+    @Column({ default: 0 })
+    totalEvaluation: number; // Tổng số đánh giá của người dùng
+    @Column({ default: 0 })
+    totalThanks: number; // Tổng số cảm ơn của người dùng
+
 }
