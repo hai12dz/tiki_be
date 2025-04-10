@@ -26,7 +26,9 @@ export class ProductsService {
             .leftJoinAndSelect('product.category', 'category')
             .leftJoinAndSelect('product.supplier', 'supplier')
             .leftJoinAndSelect('product.brand', 'brand')
-            .leftJoinAndSelect('product.promotions', 'promotions');
+            .leftJoinAndSelect('product.promotions', 'promotions')
+            .leftJoinAndSelect('product.reviews', 'reviews')
+            .leftJoinAndSelect('reviews.user', 'user');
 
         // 🔹 Search theo `mainText`
         if (mainText) {
@@ -207,8 +209,14 @@ export class ProductsService {
         const res = await this.productRepository.createQueryBuilder('product')
             .leftJoinAndSelect('product.supplier', 'supplier')
             .leftJoinAndSelect('product.category', 'category')
+            .leftJoinAndSelect('product.reviews', 'reviews')
+            .leftJoinAndSelect('reviews.user', 'user')
+            .leftJoinAndSelect('product.brand', 'brand')
+            .leftJoinAndSelect('product.promotions', 'promotions')
             .where('product.id = :id', { id: parseInt(query, 10) })
             .getOne();
+
+        console.log(res);
 
         if (!res) {
             return new BaseResponseDto<ProductDto>(HttpStatus.OK, "Không tìm thấy sản phẩm!");

@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Expose } from 'class-transformer';
 import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
@@ -17,4 +17,21 @@ export class UpdateUserDto {
     @IsOptional()
     @IsString()
     avatar?: string;
+}
+
+export class UserDto {
+    @Expose()
+    id: string;
+
+    @Expose()
+    fullName: string;
+
+    @Expose()
+    avatar: string;
+
+    @Expose()
+    totalEvaluation: number;
+
+    @Expose()
+    totalThanks: number;
 }
