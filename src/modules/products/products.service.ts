@@ -26,9 +26,7 @@ export class ProductsService {
             .leftJoinAndSelect('product.category', 'category')
             .leftJoinAndSelect('product.supplier', 'supplier')
             .leftJoinAndSelect('product.brand', 'brand')
-            .leftJoinAndSelect('product.promotions', 'promotions')
-            .leftJoinAndSelect('product.reviews', 'reviews')
-            .leftJoinAndSelect('reviews.user', 'user');
+            .leftJoinAndSelect('product.promotions', 'promotions');
 
         // 🔹 Search theo `mainText`
         if (mainText) {
