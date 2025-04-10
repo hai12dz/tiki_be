@@ -205,18 +205,25 @@ export class ProductsService {
 
     async fetchProductById(query: string) {
         const res = await this.productRepository.createQueryBuilder('product')
-            .leftJoinAndSelect('product.supplier', 'supplier') // ✅ JOIN bảng supplier
+            .leftJoinAndSelect('product.supplier', 'supplier')
+            .leftJoinAndSelect('product.category', 'category')
             .where('product.id = :id', { id: parseInt(query, 10) })
-            .getOne(); // Lấy 1 sản phẩm duy nhất
+            .getOne();
 
         if (!res) {
             return new BaseResponseDto<ProductDto>(HttpStatus.OK, "Không tìm thấy sản phẩm!");
         }
 
+        // Create a modified product with category name mapped correctly
+        const productWithCategory = {
+            ...res,
+            category: res.category?.name || null
+        };
+
         return new BaseResponseDto<ProductDto>(
             HttpStatus.OK,
             "Success!",
-            plainToInstance(ProductDto, res, {
+            plainToInstance(ProductDto, productWithCategory, {
                 excludeExtraneousValues: true,
                 enableImplicitConversion: true
             })
