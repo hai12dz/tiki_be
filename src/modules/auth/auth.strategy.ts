@@ -10,10 +10,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req: Request) => {
-                    // 🟢 Lấy Access Token từ Header
                     let token = req.headers.authorization?.split(' ')[1];
 
-                    // 🔵 Nếu không có Access Token, lấy Refresh Token từ Cookie
                     if (!token) {
                         token = req.cookies?.refresh_token;
                         if (!token) return null; // Không có token nào
